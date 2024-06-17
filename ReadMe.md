@@ -1,4 +1,4 @@
-#Groups and Meetings App#
+# Groups and Meetings App #
 
 This is a simple app, with users, authentication and authorisation, a secure API, and a front-end, to try out some C# and AWS services.
 
