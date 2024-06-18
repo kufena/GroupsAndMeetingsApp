@@ -1,0 +1,46 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Groups and Meetings User Pool
+Resources:
+  GroupsAndMeetingsUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: GroupsAndMeetingsUserPool
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireUppercase: true
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Mutable: true
+          Required: true
+        - Name: phoneNumber
+          AttributeDataType: String
+          Mutable: true
+          Required: false
+      AutoVerifiedAttributes:
+        - email
+      EmailConfiguration:
+        EmailSendingAccount: COGNITO_DEFAULT
+  GroupsAndMeetingsUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: GroupsAndMeetingsUserPoolClient
+      UserPoolId:
+        Ref: GroupsAndMeetingsUserPool
+      GenerateSecret: true
+      ExplicitAuthFlows: 
+        - ALLOW_USER_PASSWORD_AUTH
+        - ALLOW_USER_SRP_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      TokenValidityUnits:
+         AccessToken: minutes
+         IdToken: minutes
+         RefreshToken: days
+      AccessTokenValidity: 60
+      IdTokenValidity: 60
+      RefreshTokenValidity: 10
+      EnableTokenRevocation: true
