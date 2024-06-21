@@ -1,5 +1,21 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Groups and Meetings User Pool
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
+    Description: The environment to deploy the stack to
+  CallBackURL:
+    Type: String
+    Default: https://localhost:3000/login
+    Description: The URL to redirect to after login
+  LogoutURL:
+    Type: String
+    Default: https://localhost:3000/logout
+    Description: The URL to redirect to after logout  
 Resources:
   GroupsAndMeetingsUserPool:
     Type: AWS::Cognito::UserPool
@@ -25,6 +41,14 @@ Resources:
         - email
       EmailConfiguration:
         EmailSendingAccount: COGNITO_DEFAULT
+
+  GroupsAndMeetingsUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: groupsandmeetinsapp
+      UserPoolId:
+        Ref: GroupsAndMeetingsUserPool
+
   GroupsAndMeetingsUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
     Properties:
@@ -32,10 +56,19 @@ Resources:
       UserPoolId:
         Ref: GroupsAndMeetingsUserPool
       GenerateSecret: true
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - email
+        - openid
+        - profile
       ExplicitAuthFlows: 
         - ALLOW_USER_PASSWORD_AUTH
         - ALLOW_USER_SRP_AUTH
         - ALLOW_REFRESH_TOKEN_AUTH
+      SupportedIdentityProviders:
+        - COGNITO   
       TokenValidityUnits:
          AccessToken: minutes
          IdToken: minutes
@@ -44,3 +77,7 @@ Resources:
       IdTokenValidity: 60
       RefreshTokenValidity: 10
       EnableTokenRevocation: true
+      CallbackURLs:
+        - Ref: CallBackURL
+      LogoutURLs:
+        - Ref: LogoutURL
