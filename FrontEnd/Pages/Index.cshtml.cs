@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -12,6 +13,7 @@ namespace FrontEnd.Pages
             _logger = logger;
         }
 
+        [Authorize]
         public void OnGet()
         {
 
