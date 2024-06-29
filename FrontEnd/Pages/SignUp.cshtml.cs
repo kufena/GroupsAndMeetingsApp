@@ -19,6 +19,9 @@ namespace FrontEnd.Pages
             //                "token_type":"Bearer", 
             //                "expires_in":3600
             //               }
-    }
+            
+            Response.Headers.Append("FilthyCatFlapFlag", new Microsoft.Extensions.Primitives.StringValues(code));
+            Redirect("/");
+        }
     }
 }
